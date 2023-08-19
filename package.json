@@ -1,0 +1,28 @@
+{
+  "name": "watchtower-gui",
+  "version": "1.0.0",
+  "description": "AIO frontend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DefineX-Studios/WatchTower-GUI.git"
+  },
+  "keywords": [
+    "React",
+    "Node.js"
+  ],
+  "author": "enigmazflo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DefineX-Studios/WatchTower-GUI/issues"
+  },
+  "homepage": "https://github.com/DefineX-Studios/WatchTower-GUI#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "fs": "^0.0.1-security"
+  }
+}
