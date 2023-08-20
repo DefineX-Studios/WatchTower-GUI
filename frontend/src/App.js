@@ -50,6 +50,7 @@ const MyComponent = () => {
         let ram_value = []
         let disks_value = []
         let hours = []
+        let last_update = ''
 
         let time_data = stats['history']
         let cpu_info =  stats['cpu']
@@ -80,14 +81,15 @@ const MyComponent = () => {
                 }
             }
             hours.push(date.getHours() + ':' + date.getMinutes() + '-' + date.getDate())
-
         })
 
-        return <div className={"card-main p-3"} key={hostname}>
+        last_update = date.getMonth() + '/' + + date.getDate() + ' ' + date.getHours()+':' + date.getMinutes()
+        console.log(last_update)
+        return <div className={"card-main p-3 m-2"} key={hostname}>
             <div className={"row w-100"}>
-                <div className={"col-sm-4"}></div>
-                <div className={"col-sm-4"}><h1 className={"textflare text-center"}>{hostname}</h1></div>
-                <div className={"col-sm-4"}></div>
+                <div className={"col-sm-1"}></div>
+                <div className={"col-sm-10"}><h1 className={"textflare text-center"}>{hostname} | Last Updated: {last_update}</h1></div>
+                <div className={"col-sm-1"}></div>
             </div>
 
             <div className="collapsible-container">
@@ -98,8 +100,8 @@ const MyComponent = () => {
                                 {line_graph_generate(hours,
                                     'CPU Usage',
                                     cpu_value,
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(75, 76, 76, 0.2)'
+                                    '#5e4321',
+                                    '#5e432155'
                                 )}
                             </div>
                         </div>
@@ -110,8 +112,8 @@ const MyComponent = () => {
                                 {line_graph_generate(hours,
                                     'RAM Usage',
                                     ram_value,
-                                    'rgba(75, 192, 98, 1)',
-                                    'rgba(75, 87, 98, 0.2)'
+                                    '#C2BAB1',
+                                    '#C2BAB155'
                                 )}
                             </div>
                         </div>
@@ -122,8 +124,8 @@ const MyComponent = () => {
                                 {line_graph_generate(hours,
                                     "Disk Usage",
                                     disks_value,
-                                    'rgba(75, 19, 39, 1)',
-                                    'rgba(75, 19, 23, 0.2)'
+                                    '#d0aa7b',
+                                    '#d0aa7b'
                                 )}
                             </div>
                         </div>
