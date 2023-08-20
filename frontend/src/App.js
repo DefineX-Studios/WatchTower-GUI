@@ -58,14 +58,14 @@ const MyComponent = () => {
         let process_list = stats['process']
 
         let date = 0
-        Object.keys(time_data).forEach(timestamp => {
-            // Initialize arrays in disks_value for each key
-            for (const key in time_data[Object.keys(time_data)[0]]) {
-                if (key !== "cpu_used" && key !== "ram_used") {
-                    disks_value[key] = [];
-                }
+
+        // Initialize arrays in disks_value for each key
+        for (const key in time_data[Object.keys(time_data)[0]]) {
+            if (key !== "cpu_used" && key !== "ram_used") {
+                disks_value[key] = [];
             }
-        })
+        }
+
 
         Object.keys(time_data).forEach(timestamp => {
             //console.log(time_data[timestamp])
@@ -79,11 +79,17 @@ const MyComponent = () => {
                     disks_value[key].push(time_data[timestamp][key]);
                 }
             }
-            hours.push(date.getHours())
+            hours.push(date.getHours() + ':' + date.getMinutes() + '-' + date.getDate())
+
         })
 
         return <div className={"card-main p-3"} key={hostname}>
-            <h1 className={"textflare text-center"}>{hostname}</h1>
+            <div className={"row w-100"}>
+                <div className={"col-sm-4"}></div>
+                <div className={"col-sm-4"}><h1 className={"textflare text-center"}>{hostname}</h1></div>
+                <div className={"col-sm-4"}></div>
+            </div>
+
             <div className="collapsible-container">
                 <div className={"row p-2"}>
                     <div className={"col-sm-4"}>
@@ -141,7 +147,7 @@ const MyComponent = () => {
                                     </div>
                                 </div>
                                 <div className="fcard-image">
-                                    <img  width={"70"} height={"70"}  src={require('../src/images/cpu.svg')} />
+                                    <img  width={"50"} height={"50"}  src={require('../src/images/cpu.svg')} alt={"CPU"}/>
                                 </div>
                             </div>
                             {/*custom css end*/}
@@ -160,7 +166,7 @@ const MyComponent = () => {
                                     </div>
                                 </div>
                                 <div className="fcard-image">
-                                    <img  width={"70"} height={"70"}  src={require('../src/images/memory-solid.svg')} />
+                                    <img width={"50"} height={"50"}  src={require('../src/images/memory-solid.svg')} alt={"RAM"}/>
                                 </div>
                             </div>
                             {/*custom css end*/}
@@ -182,8 +188,8 @@ const MyComponent = () => {
                                     </div>
                                     <div className="fcard-image">
                                         <img
-                                            width={"70"}
-                                            height={"70"}
+                                            width={"50"}
+                                            height={"50"}
                                             src={require('../src/images/hard-drive-regular.svg')}
                                             alt="Disk Icon"
                                         />
@@ -207,8 +213,8 @@ const MyComponent = () => {
                                 {Object.keys(process_list).map(pid => (
                                     <tr key={pid}>
                                         <td>{pid}</td>
-                                        <td>{process_list[pid].process_name}</td>
-                                        <td>{process_list[pid].memory_used}</td>
+                                        <td>{process_list[pid]["process_name"]}</td>
+                                        <td>{process_list[pid]["memory_used"]}</td>
                                     </tr>
                                 ))}
                                 </tbody>
@@ -226,10 +232,6 @@ const MyComponent = () => {
         let obj = api_response
         let final = [];
         let cards = [];
-        let cpu = []
-        let ram = []
-        let disk_info = []
-        let processes = []
         let card_elements = []
 
         const regex = /^(.*?)(?:-history.json|-live.json)$/;

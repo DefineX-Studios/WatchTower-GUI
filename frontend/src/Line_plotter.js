@@ -1,6 +1,7 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { LinearScale, CategoryScale, PointElement, LineElement, Tooltip, Title, Legend ,Chart } from "chart.js";
+import { LinearScale, CategoryScale, PointElement, LineElement, Tooltip, Title, Legend, defaults ,Chart } from "chart.js";
+
 Chart.register(LinearScale);
 Chart.register(CategoryScale);
 Chart.register(PointElement);
@@ -9,9 +10,14 @@ Chart.register(Tooltip);
 Chart.register(Title);
 Chart.register(Legend);
 
-//Why this? For some odd reason they removed this in v4 and now you gotta import them manually
+defaults.font.family = 'Monospace';
+defaults.font.style = "bold"
+defaults.color = "#000"
+
+//Why this? For some odd reason they removed this in v4, and now you go to import them manually
 const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor }) => {
-    let chartData = {}
+    let chartData
+    let options
     if(data.length < 2){
         const datasets = [];
 
@@ -29,6 +35,38 @@ const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor })
             labels: labels,
             datasets: datasets,
         };
+
+        options = {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: datasetLabel,
+                },
+            },
+            scales: {
+                y: {
+                    type: 'linear', // Make sure the type is 'linear'
+                    beginAtZero: true,
+                    min: 0,
+                    ticks: {
+                        stepSize: 500,
+                        callback: function (value) {
+                            return value + " MB";
+                        }
+                    }
+                },
+
+            },
+            legend: {
+                labels: {
+                    fontSize: 25,
+                }
+            }
+        };
     }
     else{
         chartData = {
@@ -42,27 +80,41 @@ const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor })
                 },
             ],
         };
+
+        options = {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: datasetLabel,
+                },
+            },
+            scales: {
+                y: {
+                    type: 'linear', // Make sure the type is 'linear'
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                        stepSize: 20,
+                        callback: function (value) {
+                            return value + " %";
+                        }
+                    }
+                },
+
+            },
+            legend: {
+                labels: {
+                    fontSize: 25
+                }
+            }
+        };
     }
 
-
-    const options = {
-        responsive: true,
-        plugins: {
-            legend: {
-                position: 'top',
-            },
-            title: {
-                display: true,
-                text: datasetLabel,
-            },
-        },
-        scales: {
-            y: {
-                type: 'linear', // Make sure the type is 'linear'
-                beginAtZero: true,
-            },
-        },
-    };
 
 
     return (

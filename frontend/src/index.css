@@ -1,17 +1,20 @@
+:root {
+  --background: #F3E9DD;
+  --card-background: #F1DDBF;
+  --header-h1: #AD8B73;
+  --header-border: #AD8B73;
+  --facrd: #faf4ec;
+}
+
+
 body {
-  background: #EFEAD8 !important;
+  background: var(--background) !important;
   margin: 0;
-  font-family: monospace, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif !important;
+  font-family: monospace !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
 header {
   display: flex;
   margin: 0;
@@ -20,9 +23,9 @@ header {
 header h1 {
   font-size: 40px !important;
   font-weight: 500;
-  color: #AD8B73;
-  border-right: 2px solid #AD8B73;
-  animation: cursor 1s infinite step-end, typing 10s infinite steps(16);
+  color: var(--header-h1);
+  border-right: 2px solid var(--header-h1);
+  animation: cursor 2s infinite step-end, typing 10s infinite steps(16);
   white-space: nowrap;
   overflow: hidden;
 }
@@ -30,32 +33,28 @@ header h1 {
   0%, 100%{border-color: transparent;}
   50%{border-color: #000;}
 }
+
 @keyframes typing{
   0%{ width: 0ch} /*Text is hidden*/
-  30%{ width: 10ch;} /*The enitre header will be typed out*/
+  30%{ width: 10ch;} /* Enitre header will be typed out*/
   80%{ width: 10ch;} /*Text stays visible*/
   90%{ width: 0ch;} /*Text is deleted*/
   100%{ width: 0ch;} /*Text stays hidden*/
 }
 
 .card-main {
-  background: #F1DDBF;
+  background: var(--card-background);
   height: auto;
   border-radius: 50px;
 }
 
 .card {
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
-  border-radius: 28px !important;
+  border-radius: 50px !important;
   border:none !important;
 }
 
-body {
-  background: #F3E9DD !important;
-}
-
 .fcard {
-  background: #FAF7F0;
+  background: var(--facrd);
   color: black;
   position: relative;
   border-radius: 2.5em;
@@ -128,7 +127,7 @@ body {
 }
 
 .textflare {
-  background-color: #f1f1f1;
+  background-color: var(--background);
   border-radius: 50px;
   width: auto !important;
   height: auto;
@@ -168,3 +167,4 @@ body {
 .collapsible-content.collapsed {
   display: none;
 }
+
