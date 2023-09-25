@@ -3,15 +3,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LineGraph from './Line_plotter';
 import './index.css';
 
-const MyComponent = () => {
+const WatchTower = () => {
     const [apiData, setApiData] = useState(null);
     const [isCollapsed, setIsCollapsed] = useState(true);
+
+    const [websites, setWebsites] = useState([]);
 
     const toggleCollapse = () => {
         setIsCollapsed(!isCollapsed);
     };
-        useEffect(() => {
-        // Fetch data from the API using a Promise
+
+    //For fetching api data
+    useEffect(() => {
+    // Fetch data from the API using a Promise
         const fetchData = () => {
             return fetch('http://localhost:5001/api/files')
                 .then(response => response.json())
@@ -28,6 +32,26 @@ const MyComponent = () => {
             });
 
     }, []);
+
+    useEffect(() => {
+        // Fetch data from the API using a Promise
+        const fetchData = () => {
+            return fetch('http://localhost:5001/api/websites')
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Error fetching API data:', error);
+                });
+        };
+        // Call the fetchData function and handle the promise result
+        fetchData()
+            .then(data => {
+                // Set the fetched data in state
+                setWebsites(data);
+            });
+
+    }, []);
+
+
     function line_graph_generate(graphLabels, graphDatasetLabel, graphData,graphBorderColor, graphBackgroundColor) {
 
         return (
@@ -50,7 +74,7 @@ const MyComponent = () => {
         let ram_value = []
         let disks_value = []
         let hours = []
-        let last_update = ''
+        let last_update
 
         let time_data = stats['history']
         let cpu_info =  stats['cpu']
@@ -84,7 +108,7 @@ const MyComponent = () => {
         })
 
         last_update = date.getMonth() + '/' + + date.getDate() + ' ' + date.getHours()+':' + date.getMinutes()
-        console.log(last_update)
+
         return <div className={"card-main p-3 m-2"} key={hostname}>
             <div className={"row w-100"}>
                 <div className={"col-sm-1"}></div>
@@ -229,7 +253,11 @@ const MyComponent = () => {
 
     }
 
-//
+    function websites_url(response){
+        console.log(response)
+    }
+
+    //Main ui function
     function main_ui(api_response){
         let obj = api_response
         let final = [];
@@ -263,19 +291,22 @@ const MyComponent = () => {
         for (const [host, stats] of Object.entries(card_elements)) {
             cards[host] = card_ui_generator_for_history(host, stats)
         }
-        console.log(cards)
+        //console.log(cards)
         return (
 
             <div className="container">
                 <div className="row w-100 m-2 p-2">
                     <header><h1>WatchTower</h1></header>
                 </div>
-                {Object.keys(cards).map(key => cards[key])}
+                {
+                    Object.keys(cards).map(key => cards[key])
+                }
             </div>
         )
     }
     return (
         <div>
+            {websites ? (websites_url(websites)) : (<p>Fetching website</p>)}
             {apiData ? (
                 main_ui(apiData)
             ) : (
@@ -283,7 +314,7 @@ const MyComponent = () => {
             )}
         </div>
     );
-};
+}
 
-export default MyComponent;
+export default WatchTower;
 

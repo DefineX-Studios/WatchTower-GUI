@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { LinearScale, CategoryScale, PointElement, LineElement, Tooltip, Title, Legend, defaults ,Chart } from "chart.js";
+import { LinearScale, CategoryScale, PointElement, LineElement, Tooltip, Title, Legend, defaults, Filler ,Chart } from "chart.js";
 
 Chart.register(LinearScale);
 Chart.register(CategoryScale);
@@ -9,9 +9,9 @@ Chart.register(LineElement);
 Chart.register(Tooltip);
 Chart.register(Title);
 Chart.register(Legend);
+Chart.register(Filler)
 
 defaults.font.family = 'Monospace';
-defaults.font.style = "bold"
 defaults.color = "#000"
 
 //Why this? For some odd reason they removed this in v4, and now you go to import them manually
@@ -75,6 +75,8 @@ const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor })
                 {
                     label: datasetLabel,
                     data: data,
+                    fill: true,
+                    fillColor : backgroundColor,
                     borderColor: borderColor,
                     backgroundColor: backgroundColor,
                 },
@@ -95,9 +97,6 @@ const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor })
             scales: {
                 y: {
                     type: 'linear', // Make sure the type is 'linear'
-                    beginAtZero: true,
-                    min: 0,
-                    max: 100,
                     ticks: {
                         stepSize: 20,
                         callback: function (value) {

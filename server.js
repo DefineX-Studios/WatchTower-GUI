@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 //This module provides an API for interacting with the file system, which we will use to read the files in the specified directory.
 const fs = require('fs');
+const {json} = require("express");
 //This module provides utilities for working with file and directory paths, helping us construct the correct path to the directory we want to list files from.
 //For future use
 //const path = require('path');
@@ -11,14 +12,13 @@ const app = express();
 //api call port
 const port = 5001;
 //Read config.json
-const file = 'config.json';
+//const file = 'config.json';
 
 //Read files synchronously
 function sync_readJSONFile(filename) {
     try {
         const data = fs.readFileSync(filename, 'utf8');
-        const config_json = JSON.parse(data);
-        return config_json;
+        return JSON.parse(data);
     } catch (error) {
         console.error('Error reading/parsing the JSON file:', error);
         throw error;
@@ -82,9 +82,9 @@ app.use(cors());
 
 // Define the API endpoint to list files from the directory
 app.get('/api/files', (req, res) => {
-    final_json = {}
-    json_data = sync_readJSONFile('config.json');
-    // Replace' with the path to your desired directory
+    let final_json = {}
+    let json_data = sync_readJSONFile('config.json');
+    // Replace with the path to your desired directory
     const directoryPath = json_data.location;
     fs.readdir(directoryPath, (err, files) => {
         if (err) {
@@ -102,8 +102,35 @@ app.get('/api/files', (req, res) => {
     });
 });
 
+app.get('/api/websites', (req, res) => {
+    let final_json = {}
+    let json_data = sync_readJSONFile('websites.json');
+    //res.json(json_data)
+    const http = require('https');
+    let website_status = [];
+    for (let website in json_data){
+        http.get(json_data[website], (up_status) => {
+            if (up_status.statusCode === 200) {
+                website_status[json_data[website]] = true;
+                console.log(`${json_data[website]} is up and running.`);
+            } else {
+                website_status[json_data[website]] = false;
+                console.log(`${json_data[website]} is down. Status code: ${up_status.statusCode}`);
+            }
+        })
 
-//open port and get stugg
+        .on('error', (err) => {
+            console.error(`Error checking ${json_data[website]}: ${err.message}`);
+        });
+
+        //console.log(website + ": "+ json_data[website])
+    }
+    res = json_data
+    console.log(website_status)
+});
+
+
+//open port and get stuff
 app.listen(port, () => {
     console.log(`Server running on http://localhost:${port}`);
 });
