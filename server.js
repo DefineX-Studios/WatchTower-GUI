@@ -5,6 +5,7 @@ const cors = require('cors');
 //This module provides an API for interacting with the file system, which we will use to read the files in the specified directory.
 const fs = require('fs');
 const {json} = require("express");
+const http = require("https");
 //This module provides utilities for working with file and directory paths, helping us construct the correct path to the directory we want to list files from.
 //For future use
 //const path = require('path');
@@ -103,31 +104,54 @@ app.get('/api/files', (req, res) => {
 });
 
 app.get('/api/websites', (req, res) => {
-    let final_json = {}
-    let json_data = sync_readJSONFile('websites.json');
-    //res.json(json_data)
-    const http = require('https');
-    let website_status = [];
-    for (let website in json_data){
-        http.get(json_data[website], (up_status) => {
-            if (up_status.statusCode === 200) {
-                website_status[json_data[website]] = true;
-                console.log(`${json_data[website]} is up and running.`);
-            } else {
-                website_status[json_data[website]] = false;
-                console.log(`${json_data[website]} is down. Status code: ${up_status.statusCode}`);
-            }
-        })
+    const json_data = sync_readJSONFile('websites.json');
+    const http = require('http'); // Use http module for http:// URLs
+    const https = require('https'); // Use https module for https:// URLs
+    const website_status = {};
 
-        .on('error', (err) => {
-            console.error(`Error checking ${json_data[website]}: ${err.message}`);
+    const checkWebsiteStatus = ([website, url]) => { // Use destructuring to get both key and object
+        const protocol = url.startsWith('https://') ? https : http; // Determine the protocol
+
+        return new Promise((resolve, reject) => {
+            const req = protocol.get(url, (up_status) => {
+                //? Why if else? so that we can check node.js error logs hence if else
+                if (up_status.statusCode === 200) {
+                    website_status[website] = up_status.statusCode;
+                    console.log(`${website} is up and running.`);
+                } else {
+                    website_status[website] = up_status.statusCode;
+                    console.log(`${website} is down. Status code: ${up_status.statusCode}`);
+                }
+                resolve();
+            })
+                .on('error', (err) => {
+                    console.error(`Error checking ${website}: ${err.message}`);
+                    website_status[website] = false; // Set status to false when there's an error
+                    resolve(); // Resolve the promise to continue checking other websites
+                });
+
+            req.on('socket', (socket) => {
+                socket.setTimeout(5000); // Set a timeout for the request
+                socket.on('timeout', () => {
+                    req.abort(); // Abort the request if it times out
+                    console.log(`${website} request timed out.`);
+                });
+            });
         });
+    };
 
-        //console.log(website + ": "+ json_data[website])
-    }
-    res = json_data
-    console.log(website_status)
+    const promises = Object.entries(json_data).map(checkWebsiteStatus);
+
+    Promise.all(promises)
+        .then(() => {
+            res.json(website_status);
+        })
+        .catch((error) => {
+            console.error('Error checking websites:', error);
+            res.status(500).json({ error: 'Internal server error' });
+        });
 });
+
 
 
 //open port and get stuff

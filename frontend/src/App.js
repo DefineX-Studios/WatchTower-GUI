@@ -6,16 +6,16 @@ import './index.css';
 const WatchTower = () => {
     const [apiData, setApiData] = useState(null);
     const [isCollapsed, setIsCollapsed] = useState(true);
+    const [websites, setWebsites] = useState({});
+    const [activeId, setActiveId] = useState(null);
 
-    const [websites, setWebsites] = useState([]);
-
-    const toggleCollapse = () => {
-        setIsCollapsed(!isCollapsed);
+    const toggleCollapse = (id) => {
+        setActiveId(id === activeId ? null : id);
     };
 
     //For fetching api data
     useEffect(() => {
-    // Fetch data from the API using a Promise
+        // Fetch data from the API using a Promise
         const fetchData = () => {
             return fetch('http://localhost:5001/api/files')
                 .then(response => response.json())
@@ -34,7 +34,6 @@ const WatchTower = () => {
     }, []);
 
     useEffect(() => {
-        // Fetch data from the API using a Promise
         const fetchData = () => {
             return fetch('http://localhost:5001/api/websites')
                 .then(response => response.json())
@@ -42,15 +41,12 @@ const WatchTower = () => {
                     console.error('Error fetching API data:', error);
                 });
         };
-        // Call the fetchData function and handle the promise result
+
         fetchData()
             .then(data => {
-                // Set the fetched data in state
                 setWebsites(data);
             });
-
     }, []);
-
 
     function line_graph_generate(graphLabels, graphDatasetLabel, graphData,graphBorderColor, graphBackgroundColor) {
 
@@ -109,7 +105,7 @@ const WatchTower = () => {
 
         last_update = date.getMonth() + '/' + + date.getDate() + ' ' + date.getHours()+':' + date.getMinutes()
 
-        return <div className={"card-main p-3 m-2"} key={hostname}>
+        return <div className={"card-main p-3 m-2"} key={hostname+"-card"}>
             <div className={"row w-100"}>
                 <div className={"col-sm-1"}></div>
                 <div className={"col-sm-10"}><h1 className={"textflare text-center"}>{hostname} | Last Updated: {last_update}</h1></div>
@@ -124,8 +120,8 @@ const WatchTower = () => {
                                 {line_graph_generate(hours,
                                     'CPU Usage',
                                     cpu_value,
-                                    '#5e4321',
-                                    '#5e432155'
+                                    '#fa7970',
+                                    '#fa797055'
                                 )}
                             </div>
                         </div>
@@ -136,8 +132,8 @@ const WatchTower = () => {
                                 {line_graph_generate(hours,
                                     'RAM Usage',
                                     ram_value,
-                                    '#C2BAB1',
-                                    '#C2BAB155'
+                                    '#faa356',
+                                    '#faa35655'
                                 )}
                             </div>
                         </div>
@@ -148,17 +144,19 @@ const WatchTower = () => {
                                 {line_graph_generate(hours,
                                     "Disk Usage",
                                     disks_value,
-                                    '#d0aa7b',
-                                    '#d0aa7b'
+                                    '#77bdfb',
+                                    '#77bdfb'
                                 )}
                             </div>
                         </div>
                     </div>
                 </div>
-                <button className="collapsible-button m-3 fcard" onClick={toggleCollapse}>
+                <button
+                    className="collapsible-button m-3 fcard"
+                    onClick={() => toggleCollapse(hostname)}>
                     More Info
                 </button>
-                <div className={`collapsible-content ${isCollapsed ? 'collapsed' : ''}`}>
+                <div className={`collapsible-content ${hostname === activeId ? '' : 'collapsed'}`}>
                     <div className={"row"}>
                         <div className={"col-sm-4"}>
                             {/*//Custom box css*/}
@@ -227,7 +225,7 @@ const WatchTower = () => {
                     <div className={"row p-4"}>
                         <h1 className={"textflare mb-4"}>Running Processes</h1>
                         <div className={"fcard"}>
-                            <table className="table table-striped">
+                            <table className="table table-dark">
                                 <thead>
                                 <tr>
                                     <th>PID</th>
@@ -253,8 +251,32 @@ const WatchTower = () => {
 
     }
 
-    function websites_url(response){
-        console.log(response)
+    function WebsiteStatusCard({ website, status }) {
+        return (
+            <div className={`fcard text-white ${status === 200 ? 'bg-suc' : 'bg-fail'} mb-3`}>
+                <h1 className="card-title text-dark">{website} {status === 200 ? <span className={"float-end"}><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg></span>
+                    : <span className={"float-end"}><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512" fill={"black"} ><path d="M342.6 150.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192 210.7 86.6 105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L146.7 256 41.4 361.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192 301.3 297.4 406.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.3 256 342.6 150.6z"/></svg></span>}</h1>
+                <div className="card-body">
+                    <h5 className="text-dark">Status: {status === 200 ? 'Up' : 'Down, Error code: ' + status }</h5>
+                </div>
+            </div>
+        );
+    }
+
+    function websites_url(websites){
+        console.log(websites);
+        return (
+            <div className="container mt-4 headerflare">
+                <h1 className={"headerflare"}>Website Status</h1>
+                <div className="row">
+                    {Object.entries(websites).map(([website, status]) => (
+                        <div key={website} className="col-md-4">
+                            <WebsiteStatusCard website={website} status={status} />
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )
     }
 
     //Main ui function
@@ -306,12 +328,12 @@ const WatchTower = () => {
     }
     return (
         <div>
-            {websites ? (websites_url(websites)) : (<p>Fetching website</p>)}
             {apiData ? (
                 main_ui(apiData)
             ) : (
                 <p>Loading data...</p>
             )}
+            {websites ? (websites_url(websites)) : (<p>Fetching website</p>)}
         </div>
     );
 }

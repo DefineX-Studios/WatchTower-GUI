@@ -9,10 +9,10 @@ Chart.register(LineElement);
 Chart.register(Tooltip);
 Chart.register(Title);
 Chart.register(Legend);
-Chart.register(Filler)
+Chart.register(Filler);
 
 defaults.font.family = 'Monospace';
-defaults.color = "#000"
+defaults.color = "#fafbfc"
 
 //Why this? For some odd reason they removed this in v4, and now you go to import them manually
 const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor }) => {
@@ -34,6 +34,7 @@ const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor })
         chartData = {
             labels: labels,
             datasets: datasets,
+            fill: true,
         };
 
         options = {
@@ -75,10 +76,9 @@ const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor })
                 {
                     label: datasetLabel,
                     data: data,
-                    fill: true,
-                    fillColor : backgroundColor,
                     borderColor: borderColor,
-                    backgroundColor: backgroundColor,
+                    backgroundColor: backgroundColor, // Set a background color
+                    fill: true, // Ensure that fill is enabled
                 },
             ],
         };
@@ -97,6 +97,9 @@ const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor })
             scales: {
                 y: {
                     type: 'linear', // Make sure the type is 'linear'
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
                     ticks: {
                         stepSize: 20,
                         callback: function (value) {
@@ -108,7 +111,7 @@ const LineGraph = ({ labels, datasetLabel, data, borderColor, backgroundColor })
             },
             legend: {
                 labels: {
-                    fontSize: 25
+                    fontSize: 25,
                 }
             }
         };

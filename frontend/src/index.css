@@ -1,9 +1,10 @@
 :root {
-  --background: #F3E9DD;
-  --card-background: #F1DDBF;
-  --header-h1: #AD8B73;
-  --header-border: #AD8B73;
-  --facrd: #faf4ec;
+  --background: #0d1117;
+  --card-background: #161b22;
+  --internal-card-bg: #212529;
+  --header-h1: #fafbfc;
+  --header-border: #21262d;
+  --facrd: #0d1117;
 }
 
 
@@ -55,7 +56,7 @@ header h1 {
 
 .fcard {
   background: var(--facrd);
-  color: black;
+  color: var(--header-h1);
   position: relative;
   border-radius: 2.5em;
   padding: 2em;
@@ -137,6 +138,7 @@ header h1 {
   padding: 1px 8px;
   white-space: nowrap;
   overflow: hidden;
+  color: var(--header-h1);
 }
 
 .collapsible-container {
@@ -146,7 +148,7 @@ header h1 {
 
 .collapsible-button {
   border:none !important;
-  background-color: #f1f1f1;
+  background-color: var(--background);
   border-radius: 50px;
   width: auto !important;
   height: auto;
@@ -156,6 +158,7 @@ header h1 {
   padding: 1px 8px;
   white-space: nowrap;
   overflow: hidden;
+  color: var(--header-h1);
 }
 
 .collapsible-content {
@@ -168,3 +171,93 @@ header h1 {
   display: none;
 }
 
+.bg-suc{
+  background-color: #b1e3ad;
+}
+
+.bg-fail{
+  background-color: #e38c8f;
+}
+
+.headerflare{
+  background-color: var(--card-background);
+  border-radius: 50px;
+  width: auto !important;
+  height: auto;
+  margin: 2px;
+  line-height: 2.3em;
+  padding: 1px 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--header-h1);
+}
+
+img, svg {
+  vertical-align: middle;
+  filter: invert(100%) sepia(0%) saturate(4380%) hue-rotate(299deg) brightness(111%) contrast(106%) !important;
+}
+
+
+
+.web_url{
+  animation: glitch 1s linear infinite;
+}
+
+@keyframes glitch{
+  2%,64%{
+    transform: translate(2px,0) skew(0deg);
+  }
+  4%,60%{
+    transform: translate(-2px,0) skew(0deg);
+  }
+  62%{
+    transform: translate(0,0) skew(5deg);
+  }
+}
+
+.web_url:before,
+.web_url:after{
+  content: attr(title);
+  position: absolute;
+  left: 0;
+}
+
+.web_url:before{
+  animation: glitchTop 1s linear infinite;
+  clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+}
+
+@keyframes glitchTop{
+  2%,64%{
+    transform: translate(2px,-2px);
+  }
+  4%,60%{
+    transform: translate(-2px,2px);
+  }
+  62%{
+    transform: translate(13px,-1px) skew(-13deg);
+  }
+}
+
+.web_url:after{
+  animation: glitchBotom 1.5s linear infinite;
+  clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+  -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+}
+
+@keyframes glitchBotom{
+  2%,64%{
+    transform: translate(-2px,0);
+  }
+  4%,60%{
+    transform: translate(-2px,0);
+  }
+  62%{
+    transform: translate(-22px,5px) skew(21deg);
+  }
+}
+
+.float-end, svg {
+  filter: invert(100%) sepia(0%) saturate(4380%) hue-rotate(299deg) brightness(111%) contrast(106%);
+}
