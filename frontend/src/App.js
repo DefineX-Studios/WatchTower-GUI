@@ -319,6 +319,18 @@ const WatchTower = () => {
             <div className="container">
                 <div className="row w-100 m-2 p-2">
                     <header><h1>WatchTower</h1></header>
+
+                    <div className="main">
+                        <span className={"ani"}>D</span>
+                        <span className={"ani"}>E</span>
+                        <span className={"ani"}>F</span>
+                        <span className={"ani"}>I</span>
+                        <span className={"ani"}>N</span>
+                        <span className={"ani"}>E</span>
+                        <span className={"ani letter add-text"}>╳</span>
+                        <span className={"ani"}>I</span>
+                        <span className={"ani"}>N</span>
+                    </div>
                 </div>
                 {
                     Object.keys(cards).map(key => cards[key])

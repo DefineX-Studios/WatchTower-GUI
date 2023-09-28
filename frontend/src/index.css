@@ -261,3 +261,36 @@ img, svg {
 .float-end, svg {
   filter: invert(100%) sepia(0%) saturate(4380%) hue-rotate(299deg) brightness(111%) contrast(106%);
 }
+
+
+.ani{
+  color: var(--header-h1);
+  margin: 0 15px;
+  line-height: .7;
+  text-shadow: 0 0 2px rgba(255, 255, 255, .45);
+  animation: span 3s ease-in infinite alternate;
+}
+.main{
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  color: var(--header-h1);
+
+  @media(max-width: 6px){ transform: scale(.90); }
+}
+.letter{
+  display: inline-flex;
+
+  animation: letter 3s ease-in-out infinite alternate;
+  color: var(--header-h1);
+}
+@keyframes span {
+  0%,30%{ margin: 0 8px;}
+  70%,100%{ margin: 0 15px; }
+}
+@keyframes letter {
+  0%,30%{ color:white}
+  70%,100%{ color:orange}
+}
+
+
