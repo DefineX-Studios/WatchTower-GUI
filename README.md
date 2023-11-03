@@ -19,7 +19,8 @@ Welcome to WatchTower GUI! This project provides a user-friendly interface for v
 
 WatchTower GUI serves as a visualization tool for WatchTower, a Python application that collects data from multiple machines and sends it to a central master server. This graphical user interface (GUI) helps you make sense of the data by plotting insightful graphs and checking the status of configured websites.
 
-![img.png](img.png)
+![PHOTO-2023-09-26-20-18-03](https://github.com/DefineX-Studios/WatchTower-GUI/assets/96978109/1d991aa5-56de-4a69-b15c-82c5632522dc)
+
 ### Features
 
 - **Graphical Data Visualization**: View beautiful graphs generated from data collected by WatchTower Python.
